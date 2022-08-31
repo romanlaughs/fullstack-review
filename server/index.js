@@ -1,9 +1,17 @@
 const express = require('express');
 let app = express();
+let helper = require('../helpers/github.js');
+const { StringDecoder } = require('node:string_decoder');
+const decoder = new StringDecoder('utf8');
 
 app.use(express.static(__dirname + '/../client/dist'));
 
 app.post('/repos', function (req, res) {
+  req.on('data', function (data) {
+    console.log('DATA: ', decoder.write(data))
+    helper.getReposByUsername(data);
+  });
+
   // TODO - your code here!
   // This route should take the github username provided
   // and get the repo information from the github API, then
