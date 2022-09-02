@@ -8,7 +8,6 @@ app.use(express.static(__dirname + '/../client/dist'));
 
 app.post('/repos', function (req, res) {
   req.on('data', function (data) {
-    console.log('DATA: ', decoder.write(data))
     helper.getReposByUsername(data);
   });
 
