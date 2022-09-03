@@ -1,56 +1,41 @@
 const axios = require('axios');
 const config = require('../config.js');
-const { Octokit } = require("@octokit/core");
 const token = config.TOKEN;
 const db = require('../database/index.js');
 
 let getReposByUsername = (username) => {
   username = username.toString()
-  const octokit = new Octokit({ auth: config.other });
   let options = {
-    url: 'https://api.github.com/',
+    url: `https://api.github.com/users/${username}/repos`,
     headers: {
       'User-Agent': 'request',
       'Authorization': `token ${token}`
     }
   };
 
-
-  axios.get(options.url)
-  .then(() => {
-    return octokit.request('GET /users/{username}/repos', {
-      username: username
+  return axios(options)
+    .then(function (response) {
+      console.log('Data Retrieved from GitHub')
+      var resultArr = [];
+      response.data.map((repo) => {
+        resultArr.push({
+        "repoId": repo.id,
+        "name": repo.name,
+        "stargazers_count": repo.stargazers_count,
+        "html_url": repo.html_url,
+        "ownerId": repo.owner.id,
+        "login": repo.owner.login
+        })
+      })
+      return resultArr;
     })
-  })
-  .then(function (response) {
-    console.log('This Worked:')
-    var resultObj = {};
-    response.data.map((repo) => {
-      resultObj[repo.id] = {
-      "repoId": repo.id,
-      "name": repo.name,
-      "watchers_count": repo.watchers_count,
-      "watchers": repo.watchers,
-      "html_url": repo.html_url,
-      "ownerId": repo.owner.id,
-      "login": repo.owner.login
-      }
+    .then((dataArr) => {
+      var done = db.check(dataArr)
     })
-
-    return resultObj;
-  })
-  .then((dataObj) => {
-      db.save(dataObj)
-    console.log('It didn\'t crash')
-    return dataObj
-  })
-  .then((savedObj) => {
-    console.log('Made it here!')
-  })
-  .catch(function (error) {
-    console.log('This Did Not Work')
-    console.log(error);
-  })
-}
+    .catch(function (error) {
+      console.log('This Did Not Work')
+      console.log(error.message);
+    })
+  }
 
 module.exports.getReposByUsername = getReposByUsername;

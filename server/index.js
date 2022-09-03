@@ -3,23 +3,28 @@ let app = express();
 let helper = require('../helpers/github.js');
 const { StringDecoder } = require('node:string_decoder');
 const decoder = new StringDecoder('utf8');
+const db = require('../database/index.js');
 
 app.use(express.static(__dirname + '/../client/dist'));
+app.use(express.urlencoded({extended: true}));
 
 app.post('/repos', function (req, res) {
-  req.on('data', function (data) {
-    helper.getReposByUsername(data);
-  });
-
-  // TODO - your code here!
-  // This route should take the github username provided
-  // and get the repo information from the github API, then
-  // save the repo information in the database
+  var data = req.body
+  var userArr = Object.keys(data)
+  var userName = userArr[0];
+  helper.getReposByUsername(userName)
+  .then((data) => {
+    res.end()
+  })
 });
 
 app.get('/repos', function (req, res) {
-  // TODO - your code here!
-  // This route should send back the top 25 repos
+  return db.find()
+  .then((repos) => {
+    console.log(repos)
+    res.send(JSON.stringify(repos))
+    console.log(repos)
+  })
 });
 
 let port = 1128;

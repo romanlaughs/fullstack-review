@@ -6,54 +6,70 @@ mongoose.connect('mongodb://localhost/fetcher', { useNewUrlParser: true }, () =>
 let repoSchema = mongoose.Schema({
       "repoId": Number,
       "name": String,
-      "watchers_count": Number,
-      "watchers": Number,
+      "stargazers_count": Number,
       "html_url": String,
       "ownerId": Number,
       "login": String
 });
 
+repoSchema.query.top25 = function() {
+  return this.where({}).sort({stargazers_count: 'desc'}).limit(25);
+}
+
 let Repo = mongoose.model('Repo', repoSchema);
 
-let save = async (repoId) => {
-  var gitHubName = null;
-
-  for (var key in repoId) {
-    gitHubName = repoId[key].login
-  };
-
-  var savingData = (data) => {
-    for (var i in data) {
-      const Fetched = new Repo({
-        "repoId": data[i].repoId,
-        "name": data[i].name,
-        "watchers_count": data[i].watchers_count,
-        "watchers": data[i].watchers,
-        "html_url": data[i].html_url,
-        "ownerId": data[i].ownerId,
-        "login": data[i].login
+let save = async (repo) => {
+  for (var i = 0; i < repo.length; i++) {
+    const Fetched = new Repo({
+      "repoId": repo[i].repoId,
+      "name": repo[i].name,
+      "stargazers_count": repo[i].stargazers_count,
+      "html_url": repo[i].html_url,
+      "ownerId": repo[i].ownerId,
+      "login": repo[i].login
       })
-      Fetched.save()
+    Fetched.save()
+  }
+}
+
+
+
+let check = function(repoInfo) {
+  var gitHubName = repoInfo[0].login;
+  return Repo.find({login: gitHubName})
+  .then((value) => {
+    if (value.length) {
+      Repo.deleteMany({login: gitHubName}, () => {
+        console.log('ALL SET!!!!!!!!!!!!!')
+      })
+      console.log('Deleted!')
     }
+    return repoInfo
+  })
+  .then((repos) => {
+      save(repos)
+      console.log('Repo Saved')
+      return repos
+    })
+  .then((newData) => {
+    console.log('DONE as DINNER')
+  })
+  .catch((error) => {
+      console.log(error.message);
+    })
   }
 
 
-  var check = Repo.find({login: gitHubName})
-  .then((check) => {
-    if (check.length) {
-      console.log('It Found Previous Data!!')
-      Repo.deleteMany({login: gitHubName}, () => {console.log('Deleted!')});
-    }
-    return repoId
-  })
-    .then((repos) => {
-      savingData(repos)
-      console.log('Repo Saved')
-    })
-    .catch((error) => {
-      console.log(error.message);
-    })
+let find = () => {
+  console.log('FIND WAS CALLED')
+  return Repo.find().top25()
+}
 
+let count = () => {
+  return Repo.count({});
 }
 
 module.exports.save = save;
+module.exports.find = find;
+module.exports.check = check;
+module.exports.count = count;
