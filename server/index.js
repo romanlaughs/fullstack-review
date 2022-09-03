@@ -23,7 +23,6 @@ app.get('/repos', function (req, res) {
   .then((repos) => {
     console.log(repos)
     res.send(JSON.stringify(repos))
-    console.log(repos)
   })
 });
 
