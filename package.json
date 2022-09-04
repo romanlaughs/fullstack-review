@@ -1,7 +1,6 @@
 {
   "name": "github-fetcher-fullstack-v2",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "react-dev": "webpack --mode development --watch",
@@ -27,5 +26,15 @@
     "mongoose": "^5.10.15",
     "react": "^16.4",
     "react-dom": "^16.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/romanlaughs/rpp2205-fullstack-review.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/romanlaughs/rpp2205-fullstack-review/issues"
+  },
+  "homepage": "https://github.com/romanlaughs/rpp2205-fullstack-review#readme",
+  "description": ""
 }
