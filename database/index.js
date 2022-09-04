@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/fetcher', { useNewUrlParser: true }, () => {
+mongoose.connect('mongodb://localhost/fetcher', {
+useNewUrlParser: true,
+useUnifiedTopology: true,
+useCreateIndex: true
+}, () => {
   console.log('Connected to MongoDB');
 });
 
