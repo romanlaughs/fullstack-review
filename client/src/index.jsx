@@ -8,9 +8,14 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      repos: []
+      repos: [],
+      count: 0
     }
     this.search = this.search.bind(this);
+  }
+
+  componentDidMount() {
+    this.getTop25();
   }
 
   getTop25() {
@@ -20,7 +25,9 @@ class App extends React.Component {
     })
     .then((data) => {
       var fetchedData = JSON.parse(data);
-        this.setState({repos: fetchedData})
+      var usableRepos = fetchedData.info;
+      var currentCount =fetchedData.count;
+        this.setState({repos: usableRepos, count: currentCount})
         console.log(this.state.repos);
     })
   }
@@ -42,7 +49,7 @@ class App extends React.Component {
   render () {
     return (<div>
       <h1>Github Fetcher</h1>
-      <RepoList repos={this.state.repos}/>
+      <RepoList repos={this.state.repos} count={this.state.count} />
       <Search onSearch={this.search.bind(this)}/>
     </div>)
   }

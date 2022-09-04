@@ -19,11 +19,17 @@ app.post('/repos', function (req, res) {
 });
 
 app.get('/repos', function (req, res) {
+  const returnObj = {};
   return db.find()
   .then((repos) => {
-    console.log(repos)
-    res.send(JSON.stringify(repos))
+    returnObj.info = repos
+    return db.count()
   })
+  .then((number) => {
+   returnObj.count = number;
+   res.send(JSON.stringify(returnObj))
+  })
+
 });
 
 let port = 1128;
