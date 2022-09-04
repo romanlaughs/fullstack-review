@@ -5,7 +5,8 @@ let helper = require('../helpers/github.js');
 const { StringDecoder } = require('node:string_decoder');
 const decoder = new StringDecoder('utf8');
 const db = require('../database/index.js');
-const PORT = 1128
+const path = require('path')
+const PORT = process.env.PORT || 5000
 
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(express.urlencoded({extended: true}));
