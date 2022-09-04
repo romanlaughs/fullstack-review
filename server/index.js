@@ -8,6 +8,7 @@ const db = require('../database/index.js');
 const path = require('path')
 const PORT = process.env.PORT || 5000
 
+
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(express.urlencoded({extended: true}));
 

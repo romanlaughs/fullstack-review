@@ -18,6 +18,7 @@ class App extends React.Component {
     this.getTop25();
   }
 
+
   getTop25() {
     $.ajax({
       url: '/repos',
