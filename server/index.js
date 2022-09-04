@@ -1,3 +1,4 @@
+const cool = require('cool-ascii-faces');
 const express = require('express');
 let app = express();
 let helper = require('../helpers/github.js');
@@ -31,6 +32,8 @@ app.get('/repos', function (req, res) {
   })
 
 });
+
+app.get('/cool', (req, res) => res.send(cool()))
 
 let port = 1128;
 
