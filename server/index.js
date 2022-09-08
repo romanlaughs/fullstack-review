@@ -6,7 +6,7 @@ const { StringDecoder } = require('node:string_decoder');
 const decoder = new StringDecoder('utf8');
 const db = require('../database/index.js');
 const path = require('path')
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 1128
 
 
 app.use(express.static(__dirname + '/../client/dist'));
